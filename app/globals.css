@@ -2,20 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+/* Customiza a barra de rolagem para navegadores WebKit (Chrome, Edge e Safari) */
+::-webkit-scrollbar {
+  width: 8px; /* Largura do scroll */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Cor do fundo do scroll */
+  border-radius: 10px; /* Borda arredondada */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Cor da barra de rolagem */
+  border-radius: 10px; /* Deixa o scroll arredondado */
+  transition: background 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Cor do scroll quando passa o mouse */
+}
+
+/* Suaviza a rolagem em navegadores modernos */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Personaliza a rolagem para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes dots {
+  0% {
+    content: "typing .";
+  }
+  33% {
+    content: "typing ..";
+  }
+  66% {
+    content: "typing ...";
+  }
 }
