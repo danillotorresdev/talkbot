@@ -55,3 +55,13 @@ export const adminUndefinedMessagesHandler = http.get(
     return HttpResponse.json([]);
   }
 );
+
+export const adminUsersErrorHandler = http.get(
+  "/api/admin/users",
+  async () => {
+    return HttpResponse.json(
+      { error: "Failed to fetch users" },
+      { status: 500 }
+    );
+  }
+);

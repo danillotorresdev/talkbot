@@ -1,55 +1,6 @@
 import { Message, postChatMessage } from "@/services/chat";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-// export function useSendMessage(userName: string) {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: async ({ message }: { message: string }) =>
-//       postChatMessage({ userName, message }),
-
-//     onMutate: async ({ message }) => {
-//       await queryClient.cancelQueries({ queryKey: ["chatMessages", userName] });
-
-//       const previousMessages = queryClient.getQueryData<{
-//         messages: Message[];
-//       }>(["chatMessages", userName]);
-
-//       queryClient.setQueryData(
-//         ["chatMessages", userName],
-//         (oldData: { messages: Message[] } | undefined) => ({
-//           messages: [
-//             ...(oldData?.messages || []),
-//             {
-//               id: Math.random().toString(),
-//               chatId: "temp",
-//               author: userName,
-//               content: message,
-//               timestamp: new Date(),
-//               isNew: true,
-//             },
-//           ],
-//         })
-//       );
-
-//       return { previousMessages };
-//     },
-
-//     onError: (_err, _variables, context) => {
-//       if (context?.previousMessages) {
-//         queryClient.setQueryData(
-//           ["chatMessages", userName],
-//           context.previousMessages
-//         );
-//       }
-//     },
-
-//     onSettled: () => {
-//       queryClient.invalidateQueries({ queryKey: ["chatMessages", userName] });
-//     },
-//   });
-// }
-
 export function useSendMessage(userName: string) {
   const queryClient = useQueryClient();
 
