@@ -8,7 +8,7 @@ interface SidebarAdminProps {
   selectedUser: string | null;
 }
 
-export default function SidebarAdmin({ onSelectUser, selectedUser }: SidebarAdminProps) {
+export default function SidebarAdmin({ onSelectUser, selectedUser }: Readonly<SidebarAdminProps>) {
   const [users, setUsers] = useState<string[]>([]);
 
   useEffect(() => {

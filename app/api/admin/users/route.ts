@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import type { Chat } from "@prisma/client";
 
 export async function GET() {
   try {
-    const users: Pick<Chat, "userName">[] = await prisma.chat.findMany({
+    const users: { userName: string }[] = await prisma.chat.findMany({
       select: { userName: true },
       distinct: ["userName"],
     });
