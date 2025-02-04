@@ -20,7 +20,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8 # Versão mais recente do pnpm
+          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -43,15 +43,12 @@ jobs:
         run: pnpm exec cypress install
 
       - name: Set up DATABASE_URL
-        run: echo "DATABASE_URL=file:./dev.db" >> $GITHUB_ENV
-
-      - name: Ensure Prisma Client is Installed
-        run: pnpm add @prisma/client --save-dev
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
 
-      - name: Run Prisma Migrations
+      - name: Run Prisma Migrations (Development)
         run: pnpm prisma migrate dev --name init
 
       - name: Run ESLint (Linting)
@@ -95,11 +92,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Set up DATABASE_URL
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Run Prisma Migrations (Production)
+        run: pnpm prisma migrate deploy
+
       - name: Build Next.js project
         run: pnpm run build
 
-      # Uncomment when ready to deploy
-      # - name: Deploy to Vercel
-      #   run: |
-      #     curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_<YOUR_PROJECT_ID>" \
-      #     -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
+      - name: Deploy to Vercel
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
