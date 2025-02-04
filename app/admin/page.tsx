@@ -10,7 +10,6 @@ export default function AdminPage() {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const router = useRouter();
 
-  // Buscando mensagens com React Query
   const {
     data: messages = [],
     isLoading,

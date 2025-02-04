@@ -6,6 +6,6 @@ export default defineConfig({
     viewportWidth: 1280,
     viewportHeight: 720,
     defaultCommandTimeout: 8000,
-    video: false, // Opcional: desativa gravação de vídeos para rodar mais rápido
+    video: false,
   },
 });

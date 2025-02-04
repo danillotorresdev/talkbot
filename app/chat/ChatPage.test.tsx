@@ -63,7 +63,6 @@ describe("ChatPage - Integration Tests", () => {
     it("should show an error when sending a message fails", async () => {
       server.use(chatMessagesHandler, chatSendMessageErrorHandler);
 
-      // Get the query client instance from customRender
       const { queryClient } = customRender(<ChatPage />);
 
       const input = screen.getByPlaceholderText("Type a message...");
@@ -78,7 +77,6 @@ describe("ChatPage - Integration Tests", () => {
         );
       });
 
-      // Now `queryClient` should contain previous messages
       const previousMessages = queryClient.getQueryData<{
         messages: Message[];
       }>(["chatMessages", "Jhon"]);

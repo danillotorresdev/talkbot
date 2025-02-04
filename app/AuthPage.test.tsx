@@ -2,7 +2,6 @@ import AuthPage from "@/app/page";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mockando useRouter do Next.js
 const mockPush = vi.fn();
 
 vi.mock("next/navigation", () => ({
@@ -11,7 +10,6 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-// Mockando localStorage
 vi.stubGlobal("localStorage", {
   getItem: vi.fn(),
   setItem: vi.fn(),
