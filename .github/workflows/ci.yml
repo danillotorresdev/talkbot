@@ -19,10 +19,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'  # Certifique-se de que 'pnpm' está no cache
+          cache: 'pnpm'
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8 # Garante que o `pnpm` seja instalado corretamente
+          run_install: false # Evita a instalação automática das dependências aqui
 
       - name: Install dependencies
         run: pnpm install
