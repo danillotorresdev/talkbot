@@ -14,6 +14,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      sqlite:
+        image: nouchka/sqlite3
+        options: --name=sqlite --rm
+        ports:
+          - 3306:3306
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,16 +28,28 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 6.32.9
+          version: 8 # Versão mais recente do pnpm
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: 18 # Atualizado para compatibilidade com Prisma e Next.js 15
           cache: 'pnpm'
+
+      - name: Install Prisma CLI
+        run: pnpm add --global prisma
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Set up DATABASE_URL
+        run: echo "DATABASE_URL=file:./dev.db" >> $GITHUB_ENV
+
+      - name: Run Prisma Generate
+        run: pnpm prisma generate
+
+      - name: Run Prisma Migrate (Criação do banco de dados SQLite)
+        run: pnpm prisma migrate dev --name init
 
       - name: Run Lint
         run: pnpm run lint
