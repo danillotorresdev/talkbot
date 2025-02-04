@@ -42,14 +42,19 @@ jobs:
       - name: Install Cypress
         run: pnpm exec cypress install
 
+      - name: Debug DATABASE_URL
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+
       - name: Set up DATABASE_URL
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          export DATABASE_URL=${{ secrets.DATABASE_URL }}
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
 
       - name: Run Prisma Migrations (Development)
-        run: pnpm prisma migrate dev --name init
+        run: pnpm prisma db push  # Alterado de `migrate dev` para `db push`
 
       - name: Run ESLint (Linting)
         run: pnpm run lint
@@ -73,6 +78,7 @@ jobs:
     name: Deploy to Vercel
     needs: ci
     runs-on: ubuntu-latest
+    environment: Production  # Garante acesso ao Environment Secret da Vercel
 
     steps:
       - name: Checkout repository
@@ -92,6 +98,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Debug DATABASE_URL
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+
       - name: Set up DATABASE_URL
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
@@ -105,6 +114,12 @@ jobs:
 
       - name: Build Next.js project
         run: pnpm run build
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel
+
+      - name: Authenticate with Vercel
+        run: vercel login --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel
         run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
