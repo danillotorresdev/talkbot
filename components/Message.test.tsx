@@ -11,7 +11,7 @@ describe("Message Component", () => {
 
   it("should apply the correct styles for user messages", () => {
     render(<Message author="John Doe" content="Hey!" />);
-    const message = screen.getByText("Hey!").closest("div"); // Ensure correct element selection
+    const message = screen.getByText("Hey!").closest("div");
     expect(message).toHaveClass("bg-blue-500", "text-white", "ml-auto");
   });
 
