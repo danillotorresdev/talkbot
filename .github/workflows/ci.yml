@@ -3,12 +3,12 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - master
       - develop
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - main
+      - master
       - develop
 
 jobs:
