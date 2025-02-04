@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Workflow
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
       - master
       - develop
   pull_request:
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
@@ -15,54 +18,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '14'
           cache: 'pnpm'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8 # Garante que o `pnpm` seja instalado corretamente
-          run_install: false # Evita a instalação automática das dependências aqui
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run tests
-        run: pnpm test
+      - name: Run Lint
+        run: pnpm run lint
 
-  # cd:
-  #   name: Continuous Deployment
-  #   needs: ci
-  #   if: github.ref == 'refs/heads/main'
-  #   runs-on: ubuntu-latest
+      - name: Run TypeScript Check
+        run: pnpm run type-check
 
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
+      - name: Run Unit Tests
+        run: pnpm run test
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
-  #         cache: 'pnpm'
-
-  #     - name: Setup pnpm
-  #       uses: pnpm/action-setup@v2
-  #       with:
-  #         version: 8 # Ajuste para a versão do seu projeto
-
-  #     - name: Install dependencies
-  #       run: pnpm install
-
-  #     - name: Build Project
-  #       run: pnpm build
-
-  #     - name: Deploy to Vercel
-  #       run: pnpm vercel --prod
-  #       env:
-  #         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  #         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  #         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Run End-to-End Tests
+        run: pnpm run test:e2e
