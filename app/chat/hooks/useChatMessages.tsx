@@ -6,8 +6,8 @@ export function useChatMessages(userName: string) {
     queryKey: ["chatMessages", userName],
     queryFn: () => fetchChatMessages(userName),
     enabled: !!userName,
-    staleTime: 0, // Faz com que sempre faça um re-fetch nos testes
-    gcTime: 0, // Garante que os dados não sejam armazenados após ficarem inativos
-    retry: false, // Impede que ele tente refazer a requisição automaticamente
+    staleTime: 0,
+    gcTime: 0,
+    retry: false,
   });
 }

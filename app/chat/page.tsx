@@ -24,7 +24,6 @@ export default function ChatPage() {
     setUserName(storedUserName);
   }, [router]);
 
-  // Buscando mensagens com React Query
   const { data, isLoading, isFetching, error } = useChatMessages(userName);
   const { mutate: sendMessage, error: sendError } = useSendMessage(userName);
 
