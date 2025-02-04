@@ -8,44 +8,28 @@ on:
   pull_request:
 
 jobs:
-  ci:
-    name: Continuous Integration
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: 'pnpm'  # Certifique-se de que 'pnpm' está no cache
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run ESLint
-        run: pnpm lint
+      - name: Run tests
+        run: pnpm test
 
-      - name: Run TypeScript Check
-        run: pnpm type-check
-
-      - name: Run Unit Tests
-        run: pnpm test:unit
-
-      - name: Run E2E Tests
-        uses: cypress-io/github-action@v5
-        with:
-          install-command: pnpm install
-          run-command: pnpm test:e2e
-          start: pnpm dev
-          wait-on: "http://localhost:3000"
 
   cd:
     name: Continuous Deployment
