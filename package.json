@@ -11,7 +11,8 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "test:e2e": "cypress run",
-    "test:e2e:open": "cypress open"
+    "test:e2e:open": "cypress open",
+     "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^6.3.0",
