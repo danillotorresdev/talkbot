@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchUserMessages } from "@/services/admin";
-import { Message } from "@prisma/client";
+import { Message } from "@/services/chat";
 
 export function useUserMessages(userName: string) {
   return useQuery<Message[], Error>({
