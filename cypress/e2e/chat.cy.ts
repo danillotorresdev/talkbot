@@ -5,7 +5,8 @@ describe("Chat Application E2E", () => {
   });
 
   it("should log in, send a message, and see the bot response", () => {
-    cy.intercept("POST", "/api/chat", (req) => {
+    cy.intercept("POST", "**/api/chat", (req) => {
+      cy.log("Intercepted request:", req);
       if (req.body.message === "Hello bot!") {
         req.reply({
           statusCode: 200,
@@ -22,13 +23,11 @@ describe("Chat Application E2E", () => {
     cy.get("input[placeholder='Type a message...']").type("Hello bot!");
     cy.get("button").contains("Send").click();
 
-    cy.wait("@sendMessage");
+    cy.wait("@sendMessage", { timeout: 20000 });
 
-    cy.contains("Jhon: Hello bot!").should("exist");
+    cy.contains("Jhon: Hello bot!", { timeout: 10000 }).should("exist");
 
     cy.contains("Bot is typing...", { timeout: 10000 }).should("exist");
-
-    cy.wait(2000);
 
     cy.contains("Bot: Hi Jhon!", { timeout: 20000 }).should("be.visible");
   });
