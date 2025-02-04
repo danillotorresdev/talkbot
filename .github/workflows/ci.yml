@@ -50,10 +50,11 @@ jobs:
         run: pnpm run test -- --ci --coverage
 
       - name: Start Next.js Server
-        run: pnpm run dev & # Roda o servidor Next.js em background
+        run: pnpm run dev & # Run server in background
 
       - name: Wait for Next.js to be Ready
-        run: npx wait-on http://localhost:3000 # Aguarda o servidor iniciar
+        run: npx wait-on http://localhost:3000 --timeout 60000 # Wait up to 60s
+
 
       - name: Run Cypress Tests
         run: pnpm run test:e2e
