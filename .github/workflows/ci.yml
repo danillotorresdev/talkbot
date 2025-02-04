@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Cache Cypress Binary
         uses: actions/cache@v3
@@ -45,6 +45,9 @@ jobs:
       - name: Set up DATABASE_URL
         run: echo "DATABASE_URL=file:./dev.db" >> $GITHUB_ENV
 
+      - name: Ensure Prisma Client is Installed
+        run: pnpm add @prisma/client --save-dev
+
       - name: Generate Prisma Client
         run: pnpm prisma generate
 
@@ -62,7 +65,7 @@ jobs:
 
       - name: Start Next.js Server
         run: pnpm run dev &
-      
+
       - name: Wait for Next.js to be Ready
         run: npx wait-on http://localhost:3000 --timeout 60000
 
@@ -87,7 +90,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
