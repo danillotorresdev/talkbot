@@ -49,12 +49,15 @@ jobs:
       - name: Run Unit Tests
         run: pnpm run test -- --ci --coverage
 
-      - name: Run End-to-End Tests with Cypress
-        uses: cypress-io/github-action@v6
-        with:
-          start: pnpm run dev
-          wait-on: "http://localhost:3000"
-          browser: chrome
+      - name: Start Next.js Server
+        run: pnpm run dev & # Roda o servidor Next.js em background
+
+      - name: Wait for Next.js to be Ready
+        run: npx wait-on http://localhost:3000 # Aguarda o servidor iniciar
+
+      - name: Run Cypress Tests
+        run: pnpm run test:e2e
+
 
   deploy:
     name: Deploy to Vercel

@@ -2,10 +2,7 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:3000",
-    viewportWidth: 1280,
-    viewportHeight: 720,
-    defaultCommandTimeout: 8000,
-    video: false,
+    baseUrl: "http://localhost:3000", // Verifique se a porta está correta
+    supportFile: false,
   },
 });
