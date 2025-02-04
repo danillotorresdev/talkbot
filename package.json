@@ -12,13 +12,13 @@
     "test:coverage": "vitest --coverage",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.3.0",
     "@tanstack/react-query": "^5.66.0",
     "next": "15.1.6",
-    "prisma": "^6.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sqlite3": "^5.1.7"
@@ -39,6 +39,7 @@
     "jsdom": "^26.0.0",
     "msw": "^2.7.0",
     "postcss": "^8",
+    "prisma": "^6.3.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "vite": "^6.0.11",
