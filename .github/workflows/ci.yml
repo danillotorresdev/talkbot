@@ -93,7 +93,9 @@ jobs:
         run: pnpm install
 
       - name: Set up DATABASE_URL
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          export DATABASE_URL=${{ secrets.DATABASE_URL }}
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
