@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run Linting
+      - name: Run ESLint
         run: pnpm lint
 
       - name: Run TypeScript Check
@@ -40,84 +40,12 @@ jobs:
         run: pnpm test:unit
 
       - name: Run E2E Tests
-        run: pnpm test:e2e
-
-  cd:
-    name: Continuous Deployment
-    needs: ci
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: cypress-io/github-action@v5
         with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8 # Ajuste para a versão do seu projeto
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build Project
-        run: pnpm build
-
-      - name: Deploy to Vercel
-        run: pnpm vercel --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
-
-jobs:
-  ci:
-    name: Continuous Integration
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8 # Ajuste para a versão do seu projeto
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Run Linting
-        run: pnpm lint
-
-      - name: Run TypeScript Check
-        run: pnpm type-check
-
-      - name: Run Unit Tests
-        run: pnpm test:unit
-
-      - name: Run E2E Tests
-        run: pnpm test:e2e
+          install-command: pnpm install
+          run-command: pnpm test:e2e
+          start: pnpm dev
+          wait-on: "http://localhost:3000"
 
   cd:
     name: Continuous Deployment
