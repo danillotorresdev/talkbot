@@ -17,6 +17,7 @@ describe("Sidebar Component", () => {
   it("should call onSelectChat when Chat Bot is clicked", () => {
     const mockOnSelectChat = vi.fn();
     customRender(<Sidebar userName="John Doe" onSelectChat={mockOnSelectChat} />);
+
     const chatButton = screen.getByText(/Chat Bot/i);
     fireEvent.click(chatButton);
 
