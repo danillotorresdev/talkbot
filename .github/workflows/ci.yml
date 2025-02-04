@@ -1,25 +1,17 @@
-name: CI/CD Workflow
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - master
-      - develop
   pull_request:
     branches:
       - master
-      - develop
 
 jobs:
-  build:
+  ci:
+    name: Run CI Checks
     runs-on: ubuntu-latest
-
-    services:
-      sqlite:
-        image: nouchka/sqlite3
-        options: --name=sqlite --rm
-        ports:
-          - 3306:3306
 
     steps:
       - name: Checkout repository
@@ -33,11 +25,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18 # Atualizado para compatibilidade com Prisma e Next.js 15
+          node-version: 18
           cache: 'pnpm'
-
-      - name: Install Prisma CLI
-        run: pnpm add --global prisma
 
       - name: Install dependencies
         run: pnpm install
@@ -45,20 +34,55 @@ jobs:
       - name: Set up DATABASE_URL
         run: echo "DATABASE_URL=file:./dev.db" >> $GITHUB_ENV
 
-      - name: Run Prisma Generate
+      - name: Generate Prisma Client
         run: pnpm prisma generate
 
-      - name: Run Prisma Migrate (Criação do banco de dados SQLite)
+      - name: Run Prisma Migrations
         run: pnpm prisma migrate dev --name init
 
-      - name: Run Lint
+      - name: Run ESLint (Linting)
         run: pnpm run lint
 
       - name: Run TypeScript Check
         run: pnpm run type-check
 
       - name: Run Unit Tests
-        run: pnpm run test
+        run: pnpm run test -- --ci --coverage
 
-      - name: Run End-to-End Tests
-        run: pnpm run test:e2e
+      - name: Run End-to-End Tests with Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          start: pnpm run dev
+          wait-on: "http://localhost:3000"
+          browser: chrome
+
+  deploy:
+    name: Deploy to Vercel
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Next.js project
+        run: pnpm run build
+
+      - name: Deploy to Vercel
+        run: |
+          curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_<YOUR_PROJECT_ID>" \
+          -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
