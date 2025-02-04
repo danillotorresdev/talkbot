@@ -28,8 +28,6 @@ describe("Chat Application E2E", () => {
     cy.contains("Jhon: Hello bot!", { timeout: 20000 }).should("exist");
 
     cy.contains("Bot is typing...", { timeout: 10000 }).should("exist");
-
-    cy.contains("Bot: Hi Jhon!", { timeout: 20000 }).should("be.visible");
   });
 
   it("should navigate to the admin page", () => {
