@@ -28,8 +28,19 @@ jobs:
           node-version: 18
           cache: 'pnpm'
 
+      - name: Cache Cypress Binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            cypress-${{ runner.os }}-
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Install Cypress
+        run: pnpm exec cypress install
 
       - name: Set up DATABASE_URL
         run: echo "DATABASE_URL=file:./dev.db" >> $GITHUB_ENV
@@ -50,15 +61,13 @@ jobs:
         run: pnpm run test -- --ci --coverage
 
       - name: Start Next.js Server
-        run: pnpm run dev & # Run server in background
-
+        run: pnpm run dev &
+      
       - name: Wait for Next.js to be Ready
-        run: npx wait-on http://localhost:3000 --timeout 60000 # Wait up to 60s
-
+        run: npx wait-on http://localhost:3000 --timeout 60000
 
       - name: Run Cypress Tests
         run: pnpm run test:e2e
-
 
   deploy:
     name: Deploy to Vercel
@@ -86,7 +95,8 @@ jobs:
       - name: Build Next.js project
         run: pnpm run build
 
-      - name: Deploy to Vercel
-        run: |
-          curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_<YOUR_PROJECT_ID>" \
-          -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
+      # Uncomment when ready to deploy
+      # - name: Deploy to Vercel
+      #   run: |
+      #     curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_<YOUR_PROJECT_ID>" \
+      #     -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
