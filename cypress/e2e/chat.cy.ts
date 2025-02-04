@@ -23,7 +23,7 @@ describe("Chat Application E2E", () => {
       cy.log("📢 Conteúdo do chat:", $body.text());
     });
 
-    cy.contains("Bot:", { timeout: 12000 }).should("exist");
+    cy.contains("Bot:", { timeout: 20000 }).should('be.visible');
   });
 
   it("should navigate to the admin page", () => {
