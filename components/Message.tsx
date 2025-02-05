@@ -8,22 +8,25 @@ export interface MessageProps {
 
 function Message({ author, content, isNew }: Readonly<MessageProps>) {
   const isUser = author !== "Bot";
+
   return (
-    <div
+    <article
+      aria-atomic="true"
       className={`p-3 my-2 w-max max-w-xs rounded-lg transition-opacity duration-300 ${
         isNew ? "opacity-0 animate-fade-in" : "opacity-100"
       } ${
         isUser
-          ? "bg-blue-500 text-white ml-auto"
-          : "bg-green-100 text-green-800"
+          ? "bg-blue-600 text-white ml-auto" 
+          : "bg-green-200 text-green-900"
       }`}
+      aria-label={`${author} said: ${content}`}
+      aria-live={isNew ? "polite" : "off"} 
     >
       <strong>{author}:</strong> {content}
-    </div>
+    </article>
   );
 }
 
-// Função para evitar re-renderizações desnecessárias
 const areEqual = (prevProps: MessageProps, nextProps: MessageProps) => {
   return (
     prevProps.author === nextProps.author &&
@@ -32,5 +35,4 @@ const areEqual = (prevProps: MessageProps, nextProps: MessageProps) => {
   );
 };
 
-// Memoiza o componente Message
 export default memo(Message, areEqual);

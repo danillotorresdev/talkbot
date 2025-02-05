@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from "vitest";
 import Sidebar from "@/components/Sidebar";
 import { customRender } from "@/utils/renderWithProviders";
 
-// Mock the LogoutButton to isolate Sidebar behavior
 vi.mock("@/components/LogoutButton", () => ({
   default: () => <button data-testid="logout-button">Logout</button>,
 }));

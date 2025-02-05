@@ -32,10 +32,8 @@ describe("LogoutButton", () => {
     const logoutButton = screen.getByText("Logout");
     fireEvent.click(logoutButton);
 
-    // ✅ Verifies that 'chatUserName' was removed
     expect(localStorage.removeItem).toHaveBeenCalledWith("chatUserName");
 
-    // ✅ Verifies that the user was redirected to "/"
     expect(mockPush).toHaveBeenCalledWith("/");
   });
 });

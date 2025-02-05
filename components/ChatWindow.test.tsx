@@ -45,13 +45,11 @@ describe("ChatWindow", () => {
       { id: "2", author: "Bot", content: "Second message", isNew: false },
     ];
 
-    // Mock `scrollIntoView`
     const scrollIntoViewMock = vi.fn();
     window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
     const { rerender } = render(<ChatWindow messages={messages} />);
 
-    // Re-render with new messages
     rerender(
       <ChatWindow
         messages={[
@@ -73,10 +71,8 @@ describe("ChatWindow", () => {
 
     const { rerender } = render(<ChatWindow messages={initialMessages} />);
 
-    // Re-render with the same props
     rerender(<ChatWindow messages={initialMessages} />);
 
-    // Expect no additional re-renders due to memoization
     expect(screen.getByText("Hello!")).toBeInTheDocument();
   });
 });

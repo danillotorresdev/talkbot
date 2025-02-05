@@ -5,9 +5,14 @@ interface BotTypingIndicatorProps {
 export default function BotTypingIndicator({
   isBotTyping,
 }: Readonly<BotTypingIndicatorProps>) {
+  if (!isBotTyping) return null;
+
   return (
-    <div className="mt-2 text-gray-500 flex items-center justify-start">
-      <span className="animate-pulse h-5">{isBotTyping && 'Bot is typing...'}</span>
-    </div>
+    <p
+      className="mt-2 text-gray-500 flex items-center justify-start animate-pulse h-5"
+      aria-live="polite"
+    >
+      Bot is typing...
+    </p>
   );
 }

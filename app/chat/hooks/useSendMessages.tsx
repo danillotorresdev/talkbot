@@ -11,13 +11,15 @@ export function useSendMessage(userName: string) {
     onMutate: async ({ message }) => {
       await queryClient.cancelQueries({ queryKey: ["chatMessages", userName] });
 
-      let previousMessages = queryClient.getQueryData<{ messages: Message[] }>([
-        "chatMessages",
-        userName,
-      ]);
+      const previousMessages =
+        queryClient.getQueryData<{ messages: Message[] }>([
+          "chatMessages",
+          userName,
+        ]) ?? { messages: [] };
 
-      if (!previousMessages) {
-        previousMessages = { messages: [] }; // 🚨 Garante que previousMessages sempre tem um array
+      if (!Array.isArray(previousMessages.messages)) {
+        console.error("Invalid previousMessages structure:", previousMessages);
+        return { previousMessages: { messages: [] } };
       }
 
       queryClient.setQueryData(["chatMessages", userName], {
@@ -34,7 +36,7 @@ export function useSendMessage(userName: string) {
         ],
       });
 
-      return { previousMessages }; // Retorna previousMessages corretamente
+      return { previousMessages };
     },
 
     onError: (_err, _variables, context) => {

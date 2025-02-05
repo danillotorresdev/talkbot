@@ -2,7 +2,7 @@ import { ChatResponse, fetchChatMessages } from "@/services/chat";
 import { useQuery } from "@tanstack/react-query";
 
 export function useChatMessages(userName: string) {
-  return useQuery<ChatResponse, Error>({
+  const query = useQuery<ChatResponse, Error>({
     queryKey: ["chatMessages", userName],
     queryFn: () => fetchChatMessages(userName),
     enabled: !!userName,
@@ -10,4 +10,7 @@ export function useChatMessages(userName: string) {
     gcTime: 0,
     retry: false,
   });
+
+  console.log("Fetched chat messages:", query.data);
+  return query;
 }

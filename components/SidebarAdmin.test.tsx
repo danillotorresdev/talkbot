@@ -8,7 +8,6 @@ import {
 } from "@/__tests__/handlers/adminHandlers";
 import { customRender } from "@/utils/renderWithProviders";
 
-// Mock LogoutButton to avoid external dependencies
 vi.mock("@/components/LogoutButton", () => ({
   default: vi.fn(() => <button>Logout</button>),
 }));
@@ -25,7 +24,6 @@ describe("SidebarAdmin Component", () => {
 
     customRender(<SidebarAdmin onSelectUser={vi.fn()} selectedUser={null} />);
 
-    // Wait for users to load
     await waitFor(() => {
       expect(screen.getByText("Jhon")).toBeInTheDocument();
       expect(screen.getByText("Alice")).toBeInTheDocument();

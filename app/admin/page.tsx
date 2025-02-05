@@ -16,6 +16,29 @@ export default function AdminPage() {
     error,
   } = useUserMessages(selectedUser ?? "");
 
+  let content;
+  if (isLoading) {
+    content = (
+      <p className="text-center text-gray-500 mt-4" aria-live="polite">
+        Loading messages...
+      </p>
+    );
+  } else if (error) {
+    content = (
+      <p className="text-center text-red-500 mt-4" role="alert">
+        Failed to load messages
+      </p>
+    );
+  } else if (selectedUser) {
+    content = <ChatWindow messages={messages} />;
+  } else {
+    content = (
+      <p className="text-center text-gray-500 mt-4" aria-live="polite">
+        Select a user to view messages
+      </p>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       <SidebarAdmin
@@ -31,33 +54,21 @@ export default function AdminPage() {
 
           <button
             onClick={() => router.push("/chat")}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label="Go to user chat"
           >
             Go to Chat
           </button>
         </div>
 
-        <div className="bg-yellow-100 text-yellow-700 p-3 text-center text-sm">
+        <div
+          className="bg-yellow-100 text-yellow-700 p-3 text-center text-sm"
+          aria-hidden="true"
+        >
           This is an administrative page. Only authorized users can access it.
         </div>
 
-        <div className="flex-1 overflow-hidden">
-          {isLoading ? (
-            <p className="text-center text-gray-500 mt-4">
-              Loading messages...
-            </p>
-          ) : error ? (
-            <p className="text-center text-red-500 mt-4">
-              Failed to load messages
-            </p>
-          ) : selectedUser ? (
-            <ChatWindow messages={messages} />
-          ) : (
-            <p className="text-center text-gray-500 mt-4">
-              Select a user to view messages
-            </p>
-          )}
-        </div>
+        <div className="flex-1 overflow-hidden">{content}</div>
       </div>
     </div>
   );

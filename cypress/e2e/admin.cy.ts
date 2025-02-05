@@ -1,19 +1,17 @@
 describe("Admin Page E2E", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
-    
-    // Simula o login duas vezes para garantir que há dois chats registrados
+
     cy.visit("/");
     cy.get("input").type("Jhon");
     cy.contains("Start Chat").click();
-    cy.wait(500); // Pequeno delay para simular navegação
+    cy.wait(500); 
 
     cy.visit("/");
     cy.get("input").clear().type("Alice");
     cy.contains("Start Chat").click();
     cy.wait(500);
 
-    // Agora acessamos a página de administração
     cy.visit("/admin");
   });
 

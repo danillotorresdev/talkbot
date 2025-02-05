@@ -23,6 +23,7 @@ export async function fetchChatMessages(
   }
 
   const data = await response.json();
+  console.log("API Response:", data); 
   return data;
 }
 
