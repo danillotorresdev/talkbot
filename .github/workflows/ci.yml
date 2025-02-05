@@ -16,6 +16,7 @@ jobs:
   ci:
     name: Run CI Checks
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Checkout repository
@@ -24,16 +25,30 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8.12.0  # 🔥 Mesma versão que sua máquina
+          version: 8.12.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.10.0  # 🔥 Mesma versão que sua máquina
+          node-version: 20.10.0
           cache: "pnpm"
+
+      - name: Cache Cypress Binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            cypress-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Optimize pnpm store
+        run: pnpm store prune
+
+      - name: Install Cypress
+        run: pnpm exec cypress install
 
       - name: Debug DATABASE_URL
         run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
@@ -58,11 +73,20 @@ jobs:
       - name: Run Unit Tests
         run: pnpm run test -- --ci --coverage
 
+      - name: Start Next.js Server
+        run: pnpm run dev &
+
+      - name: Wait for Next.js to be Ready
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run Cypress Tests
+        run: pnpm run test:e2e
+
   deploy:
     name: Deploy to Vercel
     needs: ci
     runs-on: ubuntu-latest
-    environment: Production 
+    environment: Production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
