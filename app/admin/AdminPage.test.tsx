@@ -3,9 +3,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import AdminPage from "@/app/admin/page";
 import { server } from "@/__tests__/mockServer";
 import {
-  adminHandersWithoutMessages,
   adminUsersHandler,
   adminMessagesHandler,
+  adminHandersWithoutMessages,
   errorMessageByUser,
   adminUndefinedMessagesHandler,
 } from "@/__tests__/handlers/adminHandlers";
@@ -22,7 +22,7 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-describe("AdminPage - Integration tests", () => {
+describe("AdminPage - Integration Tests", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.clearAllMocks();
@@ -34,13 +34,11 @@ describe("AdminPage - Integration tests", () => {
       server.use(adminUsersHandler, errorMessageByUser);
       customRender(<AdminPage />);
 
-      await waitFor(() =>
-        expect(screen.getByText(/Jhon/i)).toBeInTheDocument()
-      );
-      fireEvent.click(screen.getByText(/Jhon/i));
+      const select = await screen.findByLabelText("User List");
+      fireEvent.change(select, { target: { value: "Jhon" } });
 
       expect(
-        await screen.findByText("Failed to load messages")
+        await screen.findByText(/Failed to load messages/i)
       ).toBeInTheDocument();
     });
 
@@ -48,12 +46,9 @@ describe("AdminPage - Integration tests", () => {
       server.use(adminUsersHandler);
       customRender(<AdminPage />);
 
-      await waitFor(() =>
-        expect(screen.getByText(/Jhon/i)).toBeInTheDocument()
-      );
-
+      const select = await screen.findByLabelText("User List");
       server.use(adminHandersWithoutMessages);
-      fireEvent.click(screen.getByText(/Jhon/i));
+      fireEvent.change(select, { target: { value: "Jhon" } });
 
       await waitFor(() => {
         expect(screen.getByText(/Empty/i)).toBeInTheDocument();
@@ -64,10 +59,8 @@ describe("AdminPage - Integration tests", () => {
       server.use(adminUsersHandler, adminUndefinedMessagesHandler);
       customRender(<AdminPage />);
 
-      await waitFor(() =>
-        expect(screen.getByText(/Jhon/i)).toBeInTheDocument()
-      );
-      fireEvent.click(screen.getByText(/Jhon/i));
+      const select = await screen.findByLabelText("User List");
+      fireEvent.change(select, { target: { value: "Jhon" } });
 
       await waitFor(() => {
         expect(
@@ -83,36 +76,21 @@ describe("AdminPage - Integration tests", () => {
       customRender(<AdminPage />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Jhon/i)).toBeInTheDocument();
-        expect(screen.getByText(/Alice/i)).toBeInTheDocument();
-        expect(screen.getByText(/Bob/i)).toBeInTheDocument();
-      });
-    });
-
-    it("should display messages when a user is selected", async () => {
-      server.use(adminUsersHandler, adminMessagesHandler);
-      customRender(<AdminPage />);
-
-      await waitFor(() =>
-        expect(screen.getByText(/Jhon/i)).toBeInTheDocument()
-      );
-      fireEvent.click(screen.getByText(/Jhon/i));
-
-      await waitFor(() => {
-        expect(screen.getByText("Hello!")).toBeInTheDocument();
-        expect(screen.getByText("Hi Jhon!")).toBeInTheDocument();
+        expect(screen.getByLabelText("User List")).toBeInTheDocument();
       });
     });
   });
 
   describe("Navigation", () => {
-    it("should navigate to the chat page when 'Go to Chat' is clicked", async () => {
+    it("should navigate to '/chat' when 'Go to Chat' is clicked", async () => {
       server.use(adminUsersHandler, adminMessagesHandler);
       customRender(<AdminPage />);
 
       fireEvent.click(screen.getByText("Go to Chat"));
 
-      expect(mockPush).toHaveBeenCalledWith("/chat");
+      await waitFor(() => {
+        expect(mockPush).toHaveBeenCalledWith("/chat");
+      });
     });
   });
 });

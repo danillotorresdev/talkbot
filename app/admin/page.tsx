@@ -7,14 +7,14 @@ import ChatWindow from "@/components/ChatWindow";
 import { useUserMessages } from "@/app/admin/hooks/useUserMessages";
 
 export default function AdminPage() {
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<string>("");
   const router = useRouter();
 
   const {
     data: messages = [],
     isLoading,
     error,
-  } = useUserMessages(selectedUser ?? "");
+  } = useUserMessages(selectedUser);
 
   let content;
   if (isLoading) {

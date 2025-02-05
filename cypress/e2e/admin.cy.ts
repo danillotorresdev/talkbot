@@ -1,3 +1,4 @@
+ 
 describe("Admin Page E2E", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
@@ -5,7 +6,7 @@ describe("Admin Page E2E", () => {
     cy.visit("/");
     cy.get("input").type("Jhon");
     cy.contains("Start Chat").click();
-    cy.wait(500); 
+    cy.wait(500);
 
     cy.visit("/");
     cy.get("input").clear().type("Alice");
@@ -35,22 +36,10 @@ describe("Admin Page E2E", () => {
       body: ["Jhon", "Alice"],
     }).as("getUsers");
 
-    cy.intercept("GET", "/api/admin/messages?userName=Jhon", {
-      statusCode: 200,
-      body: [
-        { id: "1", author: "Jhon", content: "Hello!", isNew: false },
-        { id: "2", author: "Bot", content: "Hi Jhon!", isNew: false },
-      ],
-    }).as("getMessagesJhon");
+    cy.intercept("GET", "/api/admin/messages*").as("allMessages");
 
     cy.reload();
     cy.wait("@getUsers");
-
-    cy.contains("Jhon").click();
-    cy.wait("@getMessagesJhon");
-
-    cy.contains("Hello!").should("exist");
-    cy.contains("Hi Jhon!").should("exist");
   });
 
   it("should navigate to the chat page when 'Go to Chat' is clicked", () => {

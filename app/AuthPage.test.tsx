@@ -1,5 +1,5 @@
 import AuthPage from "@/app/page";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockPush = vi.fn();
@@ -40,7 +40,7 @@ describe("AuthPage", () => {
     expect(input).toHaveValue("John Doe");
   });
 
-  it("should save the username and navigate to '/chat' when submitted", () => {
+  it("should save the username and navigate to '/chat' when submitted", async () => {
     render(<AuthPage />);
 
     const input = screen.getByPlaceholderText("Enter your name");
@@ -49,8 +49,15 @@ describe("AuthPage", () => {
     fireEvent.change(input, { target: { value: "John Doe" } });
     fireEvent.click(submitButton);
 
-    expect(localStorage.setItem).toHaveBeenCalledWith("chatUserName", "John Doe");
-    expect(mockPush).toHaveBeenCalledWith("/chat");
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      "chatUserName",
+      "John Doe"
+    );
+
+    // Espera a chamada de router.push após o setTimeout
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith("/chat");
+    });
   });
 
   it("should not navigate or save username if input is empty", () => {

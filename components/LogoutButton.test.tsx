@@ -2,18 +2,18 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import LogoutButton from "@/components/LogoutButton";
 
-const mockPush = vi.fn();
+const mockReplace = vi.fn();
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
-    push: mockPush,
-    replace: vi.fn(),
+    push: vi.fn(),
+    replace: mockReplace,
     prefetch: vi.fn(),
     pathname: "/",
   }),
 }));
 
-describe("LogoutButton", () => {
+describe.only("LogoutButton", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.clearAllMocks();
@@ -34,6 +34,6 @@ describe("LogoutButton", () => {
 
     expect(localStorage.removeItem).toHaveBeenCalledWith("chatUserName");
 
-    expect(mockPush).toHaveBeenCalledWith("/");
+    expect(mockReplace).toHaveBeenCalledWith("/");
   });
 });

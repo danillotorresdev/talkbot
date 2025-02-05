@@ -32,30 +32,36 @@ export default function ChatPage() {
     sendMessage({ message });
 
     if (liveRegionRef.current) {
-      liveRegionRef.current.innerText = ""; 
+      liveRegionRef.current.innerText = "";
       setTimeout(() => {
-        liveRegionRef.current!.innerText = `Sent: ${message}`;
+        if (liveRegionRef.current) {
+          liveRegionRef.current.innerText = `Sent: ${message}`;
+        }
       }, 100);
     }
   };
 
   const messages = useMemo(() => data?.messages ?? [], [data]);
 
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     if (messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
 
-      if (liveRegionRef.current) {
-        liveRegionRef.current.innerText = "";
-
-        setTimeout(() => {
-          liveRegionRef.current!.innerText =
+      timeoutRef.current = setTimeout(() => {
+        if (liveRegionRef.current) {
+          liveRegionRef.current.innerText =
             lastMessage.author === "bot"
               ? `Bot says: ${lastMessage.content}`
               : `Sent: ${lastMessage.content}`;
-        }, 100);
-      }
+        }
+      }, 100);
     }
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current); // ✅ Cleanup on unmount
+    };
   }, [messages]);
 
   let content;

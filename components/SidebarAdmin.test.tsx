@@ -49,20 +49,11 @@ describe("SidebarAdmin Component", () => {
       <SidebarAdmin onSelectUser={mockSelectUser} selectedUser={null} />
     );
 
-    const userButton = await screen.findByText("Jhon");
-    fireEvent.click(userButton);
-
-    expect(mockSelectUser).toHaveBeenCalledWith("Jhon");
-  });
-
-  it("should highlight the selected user", async () => {
-    server.use(adminUsersHandler);
-
-    customRender(<SidebarAdmin onSelectUser={vi.fn()} selectedUser="Alice" />);
+    const select = await screen.findByLabelText("User List");
+    fireEvent.change(select, { target: { value: "Jhon" } });
 
     await waitFor(() => {
-      const selectedUser = screen.getByText("Alice");
-      expect(selectedUser).toHaveClass("bg-gray-700");
+      expect(mockSelectUser).toHaveBeenCalledWith("Jhon");
     });
   });
 

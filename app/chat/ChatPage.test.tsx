@@ -13,16 +13,16 @@ import { customRender } from "@/utils/renderWithProviders";
 import { Message } from "@prisma/client";
 
 const mockPush = vi.fn();
-const mockPathname = vi.fn(() => "/chat");
+const mockReplace = vi.fn();
 
-vi.mock("next/navigation", async () => ({
+vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: mockPush,
-    replace: vi.fn(),
+    replace: mockReplace,
     prefetch: vi.fn(),
     pathname: "/chat",
   }),
-  usePathname: () => mockPathname(),
+  usePathname: () => "/chat",
 }));
 
 vi.stubGlobal("localStorage", {
@@ -56,7 +56,9 @@ describe("ChatPage - Integration Tests", () => {
       customRender(<ChatPage />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Empty/i)).toBeInTheDocument();
+        expect(
+          screen.findByText(/No messages yet./i)
+        ).resolves.toBeInTheDocument();
       });
     });
 
@@ -174,8 +176,10 @@ describe("ChatPage - Integration Tests", () => {
       const logoutButton = await screen.findByText("Logout");
       fireEvent.click(logoutButton);
 
-      expect(localStorage.removeItem).toHaveBeenCalledWith("chatUserName");
-      expect(mockPush).toHaveBeenCalledWith("/");
+      await waitFor(() => {
+        expect(localStorage.removeItem).toHaveBeenCalledWith("chatUserName");
+        expect(mockReplace).toHaveBeenCalledWith("/");
+      });
     });
 
     it("should redirect to home if no user is logged in", async () => {

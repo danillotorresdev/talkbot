@@ -11,6 +11,5 @@ export function useChatMessages(userName: string) {
     retry: false,
   });
 
-  console.log("Fetched chat messages:", query.data);
   return query;
 }

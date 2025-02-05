@@ -21,13 +21,13 @@ function ChatWindow({ messages }: Readonly<ChatWindowProps>) {
   return (
     <div
       className="flex-1 bg-gray-50 p-4 overflow-y-auto h-full"
-      role="log" 
-      aria-live="polite" 
+      role="log"
+      aria-live="polite"
       aria-relevant="additions text"
     >
       {messages.length === 0 && (
         <p className="text-gray-400 text-center p-4" aria-live="polite">
-          No messages yet.
+          Empty
         </p>
       )}
 

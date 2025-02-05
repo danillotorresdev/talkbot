@@ -12,7 +12,10 @@ interface SidebarAdminProps {
 const useUsers = () => {
   return useQuery({
     queryKey: ["users"],
-    queryFn: fetchUsers,
+    queryFn: async () => {
+      const users = await fetchUsers();
+      return users;
+    },
     initialData: [],
   });
 };
@@ -52,19 +55,15 @@ export default function SidebarAdmin({
         {!isLoading && !isError && users?.length > 0 && (
           <select
             className="w-full bg-gray-900 text-white p-4"
-            multiple
             aria-label="User List"
-            onChange={(e) => onSelectUser(e.target.value)}
+            value={selectedUser ?? ""}
+            onChange={(e) => {
+              const selectedValue = e.target.value;
+              onSelectUser(selectedValue);
+            }}
           >
             {users.map((user: string) => (
-              <option
-                key={user}
-                className={`p-4 text-left w-full hover:bg-gray-800 ${
-                  selectedUser === user ? "bg-gray-700" : ""
-                }`}
-                value={user}
-                selected={selectedUser === user}
-              >
+              <option key={user} value={user}>
                 {user}
               </option>
             ))}

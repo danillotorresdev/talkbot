@@ -10,12 +10,17 @@ vi.mock("@/components/LogoutButton", () => ({
 describe("Sidebar Component", () => {
   it("should render the user's name", () => {
     customRender(<Sidebar userName="John Doe" onSelectChat={vi.fn()} />);
-    expect(screen.getByText(/👤 John Doe/i)).toBeInTheDocument();
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByLabelText("Logged in user")).toHaveTextContent(
+      "John Doe"
+    );
   });
 
   it("should call onSelectChat when Chat Bot is clicked", () => {
     const mockOnSelectChat = vi.fn();
-    customRender(<Sidebar userName="John Doe" onSelectChat={mockOnSelectChat} />);
+    customRender(
+      <Sidebar userName="John Doe" onSelectChat={mockOnSelectChat} />
+    );
 
     const chatButton = screen.getByText(/Chat Bot/i);
     fireEvent.click(chatButton);
