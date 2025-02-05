@@ -12,6 +12,7 @@ jobs:
   ci:
     name: Run CI Checks
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Checkout repository
@@ -110,6 +111,7 @@ jobs:
       - name: Set up DATABASE_URL
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
           export DATABASE_URL=${{ secrets.DATABASE_URL }}
 
       - name: Generate Prisma Client
