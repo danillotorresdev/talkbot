@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TalkBot - Project Setup Guide
 
-## Getting Started
+## Prerequisites
 
-First, run the development server:
+Ensure you have the following installed on your machine:
+- [Node.js](https://nodejs.org/) (Version 18 or later recommended)
+- [pnpm](https://pnpm.io/) (Preferred package manager)
+- [PostgreSQL](https://www.postgresql.org/) (For Prisma usage)
+- [Cypress](https://www.cypress.io/) (For end-to-end testing)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Installation
+
+### 1. Clone the repository
+```sh
+git clone https://github.com/your-username/talkbot.git
+cd talkbot
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```sh
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Configure environment variables
+Copy the sample environment file and update it with your database credentials.
+```sh
+cp .env.sample .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit the `.env` file and provide the necessary configurations, including database credentials and API keys.
 
-## Learn More
+### 4. Set up the database
+Run Prisma migrations to initialize the database:
+```sh
+pnpm prisma migrate dev
+```
+Generate Prisma client:
+```sh
+pnpm prisma generate
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Running the Project
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Development Mode
+```sh
+pnpm dev
+```
+This starts the Next.js development server with Turbopack enabled.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Building for Production
+```sh
+pnpm build
+pnpm start
+```
 
-## Deploy on Vercel
+## Linting and Type Checking
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Run ESLint
+```sh
+pnpm lint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Run TypeScript Type Checking
+```sh
+pnpm type-check
+```
+
+## Testing
+
+### Unit and Integration Tests
+Run tests with Vitest:
+```sh
+pnpm test
+```
+
+Watch mode:
+```sh
+pnpm test:watch
+```
+
+Generate test coverage report:
+```sh
+pnpm test:coverage
+```
+
+### End-to-End Tests (E2E)
+Run Cypress tests:
+```sh
+pnpm test:e2e
+```
+
+Open Cypress UI:
+```sh
+pnpm test:e2e:open
+```
+
+## Folder Structure
+```
+📦 talkbot
+├── 📂 app
+│   ├── 📂 admin
+│   ├── 📂 api
+│   ├── 📂 components
+│   ├── 📂 layout.tsx
+│   ├── 📂 page.tsx
+│
+├── 📂 cypress (E2E tests)
+├── 📂 lib
+├── 📂 node_modules
+├── 📂 prisma (Database migrations and schema)
+├── 📂 public
+├── 📂 services (API services)
+├── 📂 utils
+│
+├── .env (Environment variables)
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
+├── vitest.config.ts
+├── next.config.ts
+├── README.md
+```
+
+## Deployment
+
+This project is compatible with [Vercel](https://vercel.com/) for deployment.
+To deploy, install the Vercel CLI and run:
+```sh
+vercel
+```
+Follow the on-screen instructions to complete the deployment process.
+
+---
+
+If you have any questions or issues, feel free to create an issue on GitHub! 🚀
+
