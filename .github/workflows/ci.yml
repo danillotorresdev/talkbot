@@ -127,7 +127,7 @@ jobs:
         run: pnpm install -g vercel 
 
       - name: Authenticate with Vercel
-        run: vercel login --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel login --token=${{ secrets.github_deploy }}
 
       - name: Deploy to Vercel
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --token=${{ secrets.github_deploy }}
