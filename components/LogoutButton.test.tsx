@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-describe.only("LogoutButton", () => {
+describe("LogoutButton", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.clearAllMocks();
