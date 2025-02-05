@@ -25,6 +25,7 @@ describe("ChatInput", () => {
 
   it("should call sendMessage when pressing Enter", () => {
     const mockSendMessage = vi.fn();
+    
     render(<ChatInput sendMessage={mockSendMessage} />);
 
     const input = screen.getByPlaceholderText("Type a message...");
